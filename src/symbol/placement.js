@@ -237,7 +237,7 @@ export class Placement {
     attemptAnchorPlacement(anchor: TextAnchor, textBox: SingleCollisionBox, width: number, height: number,
                            textBoxScale: number, rotateWithMap: boolean,
                            pitchWithMap: boolean, textPixelRatio: number, posMatrix: mat4, collisionGroup: CollisionGroup,
-                           textAllowOverlap: boolean, symbolInstance: SymbolInstance, bucket: SymbolBucket, orientation: number): ?{ shift: Point, placedGlyphBoxes: { box: Array<number>, offscreen: boolean } }  {
+                           textAllowOverlap: boolean, symbolInstance: SymbolInstance, bucket: SymbolBucket, orientation: number, iconBox: ?SingleCollisionBox): ?{ shift: Point, placedGlyphBoxes: { box: Array<number>, offscreen: boolean } }  {
 
         const textOffset = [symbolInstance.textOffset0, symbolInstance.textOffset1];
         const shift = calculateVariableLayoutShift(anchor, width, height, textOffset, textBoxScale);
@@ -247,6 +247,15 @@ export class Placement {
                 textBox, shift.x, shift.y,
                 rotateWithMap, pitchWithMap, this.transform.angle),
             textAllowOverlap, textPixelRatio, posMatrix, collisionGroup.predicate);
+
+        if (iconBox) {
+            const placedIconBoxes = this.collisionIndex.placeCollisionBox(
+                shiftVariableCollisionBox(
+                    iconBox, shift.x, shift.y,
+                    rotateWithMap, pitchWithMap, this.transform.angle),
+                textAllowOverlap, textPixelRatio, posMatrix, collisionGroup.predicate);
+            if (placedIconBoxes.box.length === 0) return;
+        }
 
         if (placedGlyphBoxes.box.length > 0) {
             let prevAnchor;
@@ -431,7 +440,7 @@ export class Placement {
                             const result = this.attemptAnchorPlacement(
                                 anchor, collisionTextBox, width, height,
                                 textBoxScale, rotateWithMap, pitchWithMap, textPixelRatio, posMatrix,
-                                collisionGroup, allowOverlap, symbolInstance, bucket, orientation);
+                                collisionGroup, allowOverlap, symbolInstance, bucket, orientation, hasIconTextFit ? collisionArrays.iconBox : null);
 
                             if (result) {
                                 placedBox = result.placedGlyphBoxes;
