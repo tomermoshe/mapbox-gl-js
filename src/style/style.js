@@ -1143,9 +1143,15 @@ class Style extends Evented {
             this._spriteRequest = null;
         }
         rtlTextPluginEvented.off('pluginAvailable', this._rtlTextPluginCallback);
+        for (const layer of this._layers) {
+            layer.setEventedParent(null);
+        }
         for (const id in this.sourceCaches) {
             this.sourceCaches[id].clearTiles();
+            this.sourceCaches[id].setEventedParent(null);
         }
+        this.imageManager.setEventedParent(null);
+        this.setEventedParent(null);
         this.dispatcher.remove();
     }
 
