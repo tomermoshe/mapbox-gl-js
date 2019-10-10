@@ -22,7 +22,7 @@ import type {
     PopulateParameters
 } from '../bucket';
 import type LineStyleLayer from '../../style/style_layer/line_style_layer';
-import type Point from '@mapbox/point-geometry';
+import Point from '@mapbox/point-geometry';
 import type {Segment} from '../segment';
 import type Context from '../../gl/context';
 import type IndexBuffer from '../../gl/index_buffer';
