@@ -292,8 +292,6 @@ class LineBucket implements Bucket {
 
             // if two consecutive vertices exist,
             // skip the current one if collapse to point is not allowed the line has more than 2 vertices.
-            if (nextVertex && vertices[i].equals(nextVertex)) continue;
-
             const nextEqualsCurrent = nextVertex && vertices[i].equals(nextVertex);
             if (nextEqualsCurrent) {
                 if (!collapse || len > 2) {
